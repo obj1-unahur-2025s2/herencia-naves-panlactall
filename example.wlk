@@ -1,6 +1,7 @@
 class Nave{
   var velocidad
   var direccion
+  method prepararViaje()
   method acelerar(cuanto){
     velocidad = (velocidad + cuanto.min(100000))
   }
@@ -20,23 +21,32 @@ class Nave{
     direccion=( direccion- 1).max(-10)
   }
 }
-class naveBaliza inherits Nave{
+class NaveBaliza inherits Nave{
   var color
 method cambiarColorBaliza(nuevoColor) {
   color=nuevoColor
   }
   method color() = color
+  override method prepararViaje() {
+    self.cambiarColorBaliza("verde")
+    self.ponerseParaleloAlSol()
+  }
 }
-class NaveDePasajeros{
+class NaveDePasajeros inherits Nave{
   var cantidadDePasajeros
   var property comida
   var property bebida   
+  override method prepararViaje() {
+    self.comida(self.comida()+(cantidadDePasajeros*4))
+    self.bebida(self.bebida()+(cantidadDePasajeros*6))
+    self.acercarseUnPocoAlSol()
+  }
 }
 class NaveDeCombate inherits Nave{
   var misilesDesplegados = true
   var invisible
   const mensajes=[]
-  method ponerVisible() {
+  method ponerseVisible() {
     invisible= false
   }
   method ponerInvisible() {
@@ -51,6 +61,13 @@ class NaveDeCombate inherits Nave{
   method mensajesEmitidos() = mensajes
   method primerMensajeEmitido() = mensajes.first()
   method ultimoMensajeEEmitido() = mensajes.last()
-  method esCueta () = mensajes.length({p=> p.length()}<30)
+  method esCueta () = mensajes.all({p=> p.length()}<30)
   method emitioMensaje(unMensaje) = mensajes.contains({p=>p.contains(unMensaje)})  
+
+  override method prepararViaje() {
+  self.ponerseVisible()
+  self.misilesDesplegar()
+  self.acelerar(15000)
+  self.emitioMensaje("Saliendo en mision")
+  }
 }
