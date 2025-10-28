@@ -2,6 +2,18 @@ class Nave{
   var velocidad
   var direccion
   var property combustible
+  method tienePocaActividad() 
+  method estaDeRlajo()= self.estaTraquila() and self.tienePocaActividad()
+  method escapar()
+  method avisar()
+  method recibirAmenaza() {
+    self.escapar()
+    self.avisar()
+  }
+  method estaTraquila()
+  method condicionesParaLaTranquilidad() {
+    return combustible >= 4000 and velocidad <= 1200 and direccion
+  } 
   method accionAdicional(){
     self.cargarCombustible(5000)
     self.acelerar(10000)
@@ -34,8 +46,10 @@ class Nave{
 }
 class NaveBaliza inherits Nave{
   var color
+  var cambioDeColor= false
 method cambiarColorBaliza(nuevoColor) {
   color=nuevoColor
+  cambioDeColor= true
   }
   method color() = color
   override method prepararViaje() {
@@ -43,6 +57,8 @@ method cambiarColorBaliza(nuevoColor) {
     self.cambiarColorBaliza("verde")
     self.ponerseParaleloAlSol()
   }
+  override method estaTraquila() = self.condicionesParaLaTranquilidad() and (self.color()!="rojo")
+  override method tienePocaActividad() = not cambioDeColor
 }
 class NaveDePasajeros inherits Nave{
   var cantidadDePasajeros
@@ -54,6 +70,7 @@ class NaveDePasajeros inherits Nave{
     self.bebida(self.bebida()+(cantidadDePasajeros*6))
     self.acercarseUnPocoAlSol()
   }
+   override method estaTraquila() = self.condicionesParaLaTranquilidad()
 }
 class NaveDeCombate inherits Nave{
   var misilesDesplegados = true
@@ -84,4 +101,21 @@ class NaveDeCombate inherits Nave{
   self.acelerar(15000)
   self.emitioMensaje("Saliendo en mision")
   }
+   override method estaTraquila() = self.condicionesParaLaTranquilidad()
+   override method tienePocaActividad() = true
+}
+class NaveHospital inherits NaveDePasajeros{
+  var quirofanosPreparados = false
+  method prepararQuirofanos() {
+    quirofanosPreparados = true
+  }
+  method quirofanosPreparados() = quirofanosPreparados
+  method usarQuirofanos() {
+    quirofanosPreparados = false
+  }
+   override method estaTraquila() = self.condicionesParaLaTranquilidad()
+}
+
+class NaveSigilosa inherits NaveDeCombate{
+  override method estaTraquila() = super() and (not self.estaInvisile())
 }
